@@ -3,16 +3,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import pandas as pd
-import numpy as np
 
 # Load the training dataset
 data = pd.read_csv("https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3.csv")
-
-# Display the first few rows of the dataset
-print(data.head())
-
-# Initialize the DecisionTreeClassifier with parameters
-model = DecisionTreeClassifier(max_depth=10, min_samples_leaf=10)
 
 # Define target variable (Y) and features (X), dropping unnecessary columns
 Y = data["meal"]
@@ -20,6 +13,9 @@ X = data.drop(["meal", "id", "DateTime"], axis=1)
 
 # Split the data into training and testing sets (33% test size)
 x, xt, y, yt = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+# Initialize the DecisionTreeClassifier with parameters
+model = DecisionTreeClassifier(max_depth=10, min_samples_leaf=10)
 
 # Fit the decision tree model on the training data
 modelFit = model.fit(x, y)
@@ -39,10 +35,10 @@ test = pd.read_csv("https://github.com/dustywhite7/Econ8310/raw/master/Assignmen
 testNew = test.drop(["meal", "id", "DateTime"], axis=1)
 
 # Make predictions on the test dataset
-test_predictions = model.predict(testNew)
+pred = model.predict(testNew)  # Ensure the prediction variable is named 'pred'
 
 # Store predictions (binary 0 or 1) in the test dataset
-test["meal_predictions"] = test_predictions
+test["meal_predictions"] = pred
 
 # Output the first few rows of the test dataset with predictions
 print(test[["id", "meal_predictions"]].head())
