@@ -1,28 +1,22 @@
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 import pandas as pd
+import numpy as np
 
-data_url = "https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3.csv"
-data = pd.read_csv(data_url)
+data = pd.read_csv( "https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3.csv" )
+data.head()
 
-X = data.drop(columns=["meal", "id", "DateTime"])
-y = data["meal"]
+model = DecisionTreeClassifier( max_depth = 10, min_samples_leaf = 10 )
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+Y, X = data["meal"], data.drop( ["meal", "id", "DateTime"], axis=1 )
+x, xt, y, yt = train_test_split( X, Y, test_size=0.33, random_state=42 )
 
-model = DecisionTreeClassifier(max_depth=10, min_samples_leaf=10)
-modelFit = model.fit(X_train, y_train)
+modelFit = model.fit( x,y )
 
-in_sample_accuracy = accuracy_score(y_train, model.predict(X_train))
-out_of_sample_accuracy = accuracy_score(y_test, model.predict(X_test))
+print( "\n\nIn-sample accuracy: %s%%\n\n" % str(round(100*accuracy_score(y, model.predict(x)), 2)) )
+print( "\n\nOut-of-sample accuracy: %s%%\n\n" %str(round(100*accuracy_score(yt, model.predict(xt)), 2)) )
 
-test_url = "https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3test.csv"
-test_data = pd.read_csv(test_url)
-
-X_new = test_data.drop(columns=["meal", "id", "DateTime"])
-
-pred = modelFit.predict(X_new)
-
-predictions_df = pd.DataFrame(pred, columns=['meal'])
-predictions_df.to_csv("meal_predictions.csv", index=False)
+test = pd.read_csv( "https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3test.csv" )
+testNew = test.drop( ["meal", "id", "DateTime"], axis=1 )
+testNew.head()
